@@ -1,0 +1,22 @@
+numpy
+pandas
+scikit-learn
+tqdm
+joblib
+seaborn
+matplotlib
+
+telethon
+
+nltk
+pymorphy3
+razdel
+
+dvc
+mlflow
+
+fastapi
+uvicorn
+
+tensorflow-macos; sys_platform == "darwin"
+tensorflow-metal; sys_platform == "darwin"
