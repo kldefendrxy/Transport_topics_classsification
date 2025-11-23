@@ -1,0 +1,44 @@
+schema: '2.0'
+stages:
+  preprocess:
+    cmd: python3 src/preprocess.py
+    deps:
+    - path: data/raw
+      hash: md5
+      md5: 019030e631dc206ff083cd4a2cf80287.dir
+      size: 2717205
+      nfiles: 2
+    - path: src/preprocess.py
+      hash: md5
+      md5: 5acb75ab92f762aeaf070c8853bff1fc
+      size: 2128
+    outs:
+    - path: data/processed
+      hash: md5
+      md5: 6d90c5d35209dc6ad7c3d16f73fa9cc0.dir
+      size: 7220532
+      nfiles: 1
+  train:
+    cmd: python3 src/train_models.py
+    deps:
+    - path: data/processed/dataset.csv
+      hash: md5
+      md5: 81d866032743c686d49106a85b64825f
+      size: 7220532
+    - path: src/train_models.py
+      hash: md5
+      md5: f0a56f99370d08269feec88c1eb4e745
+      size: 2592
+    outs:
+    - path: models/labels.joblib
+      hash: md5
+      md5: cbf4572dd9775f31e0ea6712204df28a
+      size: 568
+    - path: models/model.joblib
+      hash: md5
+      md5: 12237ce9f01fb4839445f08154234991
+      size: 160731
+    - path: models/vectorizer.joblib
+      hash: md5
+      md5: a8659faa8100d9df50f534806d9b6453
+      size: 3192530
