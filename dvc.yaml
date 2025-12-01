@@ -1,18 +1,22 @@
 stages:
   preprocess:
-    cmd: python src/preprocess.py
+    cmd: python3 src/preprocess.py
     deps:
       - src/preprocess.py
       - data/raw
+      - configs/train_config.yaml
     outs:
-      - data/processed
+      - data/processed/dataset.csv
 
   train:
-    cmd: python src/train_models.py
+    cmd: python3 src/train_models.py
     deps:
       - src/train_models.py
       - data/processed/dataset.csv
+      - configs/train_config.yaml
     outs:
       - models/model.joblib
       - models/vectorizer.joblib
       - models/labels.joblib
+      - models/results_baseline.csv
+      - models/results_summary.csv

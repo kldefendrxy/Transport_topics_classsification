@@ -1,53 +1,84 @@
+import yaml
 import numpy as np
 import pandas as pd
 import joblib
-import os, re
+import os
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.svm import LinearSVC
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
-import matplotlib.pyplot as plt
-import seaborn as sns
 from sklearn.preprocessing import LabelEncoder
 
-# === загрузка данных ===
-data = pd.read_csv("data/processed/dataset.csv")
-data = data.dropna(subset=["text_lemma"])
 
-# кодер для категорий
+
+cfg = yaml.safe_load(open("configs/train_config.yaml"))
+
+paths = cfg["paths"]
+vector_cfg = cfg["vectorization"]
+models_cfg = cfg["models"]
+eval_cfg = cfg["evaluation"]
+
+
+
+df = pd.read_csv(paths["processed_data"])
+df = df.dropna(subset=["text_lemma"])
+
+# Кодируем категории
 le = LabelEncoder()
-data["category_encoded"] = le.fit_transform(data["category"])
+df["label"] = le.fit_transform(df["category"])
 
-# === подготовка признаков ===
-y = data["category_encoded"]
-X = data["text_lemma"]
+X = df["text_lemma"].astype(str)
+y = df["label"]
+
+
 
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, stratify=y, random_state=42
+    X,
+    y,
+    test_size=eval_cfg["test_size"],
+    stratify=y,
+    random_state=eval_cfg["random_state"]
 )
 
-# === векторизация TF-IDF ===
+
+
+tfidf_cfg = vector_cfg["tfidf"]
+
 vectorizer = TfidfVectorizer(
-    max_features=20000,
-    ngram_range=(1, 2),
+    ngram_range=tuple(tfidf_cfg["ngram_range"]),
+    max_features=tfidf_cfg["max_features"],
+    min_df=tfidf_cfg["min_df"],
     sublinear_tf=True
 )
+
 X_train_vec = vectorizer.fit_transform(X_train)
 X_test_vec = vectorizer.transform(X_test)
 
-# === модели ===
-models = {
-    "LogisticRegression": LogisticRegression(max_iter=1000, C=2.0),
-    "LinearSVC": LinearSVC(),
-    "NaiveBayes": MultinomialNB()
-}
+
+
+def build_model(name, params):
+    if name == "LogisticRegression":
+        return LogisticRegression(**params)
+    if name == "LinearSVC":
+        return LinearSVC(**params)
+    if name == "NaiveBayes":
+        return MultinomialNB(**params)
+    raise ValueError(f"Неизвестная модель: {name}")
+
+
 
 results = []
 
-for name, model in models.items():
+for m in models_cfg:
+    name = m["name"]
+    params = m["params"]
+
+    print(f"\n=== Обучение модели {name} ===")
+    model = build_model(name, params)
     model.fit(X_train_vec, y_train)
+
     preds = model.predict(X_test_vec)
 
     acc = accuracy_score(y_test, preds)
@@ -62,26 +93,35 @@ for name, model in models.items():
         "recall": recall,
         "f1": f1
     })
+
     print(f"{name} — Accuracy: {acc:.3f}, F1: {f1:.3f}")
 
-# === результаты ===
-results_df = pd.DataFrame(results)
-results_df.to_csv("models/results_baseline.csv", index=False)
-print("\nРезультаты сохранены в models/results_baseline.csv")
+
 
 results_df = pd.DataFrame(results)
+os.makedirs(paths["model_dir"], exist_ok=True)
 
-print(results_df)
+results_df.to_csv(os.path.join(paths["model_dir"], "results_baseline.csv"), index=False)
+results_df.to_csv(os.path.join(paths["model_dir"], "results_summary.csv"), index=False)
 
-# Сохраняем в CSV
-results_df.to_csv("models/results_summary.csv", index=False)
+print("\nРезультаты сохранены в models/")
 
-# Выводим лучшую модель
 best = results_df.sort_values("f1", ascending=False).iloc[0]
 print("\nЛучшая модель:")
 print(best)
 
-joblib.dump(vectorizer, "models/vectorizer.joblib")
-joblib.dump(models[best["model"]], "models/model.joblib")
-joblib.dump(le, "models/labels.joblib")
-print("Модель и векторизатор сохранены.")
+
+
+best_model_name = best["model"]
+best_model_cfg = next(m for m in models_cfg if m["name"] == best_model_name)
+
+best_model = build_model(best_model_name, best_model_cfg["params"])
+best_model.fit(X_train_vec, y_train)
+
+
+
+joblib.dump(best_model, paths["model_path"])
+joblib.dump(vectorizer, paths["vectorizer_path"])
+joblib.dump(le, paths["labels_path"])
+
+print("\nМодель, векторизатор и LabelEncoder сохранены.")
