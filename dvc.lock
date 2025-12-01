@@ -3,6 +3,10 @@ stages:
   preprocess:
     cmd: python3 src/preprocess.py
     deps:
+    - path: configs/train_config.yaml
+      hash: md5
+      md5: f43c2f0afd6e6fafd7138cd52442c0fe
+      size: 787
     - path: data/raw
       hash: md5
       md5: 019030e631dc206ff083cd4a2cf80287.dir
@@ -10,35 +14,46 @@ stages:
       nfiles: 2
     - path: src/preprocess.py
       hash: md5
-      md5: 5acb75ab92f762aeaf070c8853bff1fc
-      size: 2128
+      md5: 5ff3f92595e41b50dd61522b8444c079
+      size: 2892
     outs:
-    - path: data/processed
+    - path: data/processed/dataset.csv
       hash: md5
-      md5: 6d90c5d35209dc6ad7c3d16f73fa9cc0.dir
-      size: 7220532
-      nfiles: 1
+      md5: 0997827dc4ad1ef943ae4b6104fff943
+      size: 7225780
   train:
     cmd: python3 src/train_models.py
     deps:
+    - path: configs/train_config.yaml
+      hash: md5
+      md5: f43c2f0afd6e6fafd7138cd52442c0fe
+      size: 787
     - path: data/processed/dataset.csv
       hash: md5
-      md5: 81d866032743c686d49106a85b64825f
-      size: 7220532
+      md5: 0997827dc4ad1ef943ae4b6104fff943
+      size: 7225780
     - path: src/train_models.py
       hash: md5
-      md5: f0a56f99370d08269feec88c1eb4e745
-      size: 2592
+      md5: 7d660a0aedfe4d786f0e59bd54844343
+      size: 3157
     outs:
     - path: models/labels.joblib
       hash: md5
-      md5: cbf4572dd9775f31e0ea6712204df28a
+      md5: 6156fdaa181b0e0ff3792632cf17d352
       size: 568
     - path: models/model.joblib
       hash: md5
-      md5: 12237ce9f01fb4839445f08154234991
-      size: 160731
+      md5: 7a3641ca8e3b21253aa7586e4eff636a
+      size: 128699
+    - path: models/results_baseline.csv
+      hash: md5
+      md5: 30f377a99e75ce0c6aebb0f2337b5e8e
+      size: 301
+    - path: models/results_summary.csv
+      hash: md5
+      md5: 30f377a99e75ce0c6aebb0f2337b5e8e
+      size: 301
     - path: models/vectorizer.joblib
       hash: md5
-      md5: a8659faa8100d9df50f534806d9b6453
-      size: 3192530
+      md5: ac5091b02d0fff630273312f6399f70d
+      size: 901545
