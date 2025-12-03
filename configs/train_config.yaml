@@ -19,7 +19,7 @@ vectorization:
   method: "tfidf"
   tfidf:
     ngram_range: [1, 2]
-    max_features: 50000
+    max_features: 20000
     min_df: 2
 
 models:
