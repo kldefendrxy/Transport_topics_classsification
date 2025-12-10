@@ -34,16 +34,16 @@ stages:
       size: 7225780
     - path: src/train_models.py
       hash: md5
-      md5: 7d660a0aedfe4d786f0e59bd54844343
-      size: 3157
+      md5: eca344eb8b4cb1efc99b6c0499ab4191
+      size: 5573
     outs:
     - path: models/labels.joblib
       hash: md5
-      md5: 6156fdaa181b0e0ff3792632cf17d352
-      size: 568
+      md5: d5db54d4574f6d109418f3f8a2646a70
+      size: 515
     - path: models/model.joblib
       hash: md5
-      md5: 7a3641ca8e3b21253aa7586e4eff636a
+      md5: 54020b6d778289fd5d2d3b493513ec29
       size: 128699
     - path: models/results_baseline.csv
       hash: md5
@@ -55,5 +55,5 @@ stages:
       size: 301
     - path: models/vectorizer.joblib
       hash: md5
-      md5: ac5091b02d0fff630273312f6399f70d
-      size: 901545
+      md5: 455ec1ea9aa3e22ae0a298d58aeda5b5
+      size: 901546
