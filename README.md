@@ -8,7 +8,7 @@
 
 ```mermaid
 flowchart TD
-    A[Raw data (CSV) data/raw] --> B[Preprocess<br>src/preprocess.py]
+    A[Raw data (CSV) \ndata/raw] --> B[Preprocess<br>src/preprocess.py]
     B --> C[Processed dataset.csv<br>data/processed]
     C --> D[Training<br>src/train_models.py]
     D --> E[Model artifacts (.joblib)<br>models/]
