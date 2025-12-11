@@ -4,15 +4,15 @@ stages:
     deps:
       - src/preprocess.py
       - data/raw
-      - configs/train_config.yaml
     outs:
-      - data/processed/dataset.csv
+      - data/processed/dataset_stem.csv
+      - data/processed/dataset_lemma.csv
 
   train:
     cmd: python3 src/train_models.py
     deps:
       - src/train_models.py
-      - data/processed/dataset.csv
+      - data/processed/dataset_lemma.csv
       - configs/train_config.yaml
     outs:
       - models/model.joblib

@@ -1,10 +1,9 @@
 paths:
-  raw_data: "data/raw/"
-  processed_data: "data/processed/dataset.csv"
-  model_dir: "models/"
-  vectorizer_path: "models/vectorizer.joblib"
-  model_path: "models/model.joblib"
-  labels_path: "models/labels.joblib"
+  processed_data: data/processed/dataset_lemma.csv
+  model_dir: models
+  model_path: models/model.joblib
+  vectorizer_path: models/vectorizer.joblib
+  labels_path: models/labels.joblib
 
 preprocessing:
   lowercase: true
