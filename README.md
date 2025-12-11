@@ -8,13 +8,13 @@
 
 ```mermaid
 flowchart TD
-    A[Raw data (CSV) \ndata/raw] --> B[Preprocess<br>src/preprocess.py]
-    B --> C[Processed dataset.csv<br>data/processed]
-    C --> D[Training<br>src/train_models.py]
-    D --> E[Model artifacts (.joblib)<br>models/]
-    E --> F[FastAPI inference<br>api/app.py]
-    F --> G[Docker Image]
-    G --> H[CI/CD GitHub Actions<br>auto-build & push]
+    A["Raw data (CSV)\ndata/raw"] --> B["Preprocess\nsrc/preprocess.py"]
+    B --> C["Processed dataset.csv\ndata/processed"]
+    C --> D["Training\nsrc/train_models.py"]
+    D --> E["Model artifacts (.joblib)\nmodels/"]
+    E --> F["FastAPI inference\napi/app.py"]
+    F --> G["Docker Image"]
+    G --> H["CI/CD GitHub Actions\nauto-build & push"]
 ```
 
 ⸻
