@@ -15,3 +15,7 @@ mlruns/
 
 # ignore sessions
 *.session
+
+# data
+data/raw/
+data/processed/
